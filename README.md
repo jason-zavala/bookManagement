@@ -64,7 +64,7 @@ A simple book management software.
 ```
 ## 3. List Books
 
-- **Endpoint**: `/api/books`
+- **Endpoint**: `/api/v1/books`
 - **Description**: This endpoint allows you to retrieve a list of all the books in the system. It returns an array of book objects, each containing information such as the book ID, title, author, published date, edition, description, and genre. Use this endpoint to get an overview of all available books.
 - **Method**: `GET`
 - **Response**:
@@ -84,7 +84,7 @@ A simple book management software.
 ```
 
 ## 4. List Collections
-- **Endpoint**: `/api/collections`
+- **Endpoint**: `/api/v1/collections`
 - **Description**: This endpoint allows you to retrieve a list of collections from the system.
 - **Method**: `GET`
 - **Response**:
