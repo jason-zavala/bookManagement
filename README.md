@@ -64,6 +64,43 @@ A simple book management software.
 ```
 ## 3. List Books
 
+## 3. List Books
+
+- **Endpoint**: `/api/books`
+- **Description**: This endpoint allows you to retrieve a list of all the books in the system. It returns an array of book objects, each containing information such as the book ID, title, author, published date, edition, description, and genre. Use this endpoint to get an overview of all available books.
+- **Method**: `GET`
+- **Response**:
+```json
+[
+  {
+    "book_id": "1234",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "published_date": "1965-08-01",
+    "edition": "1st Edition",
+    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "genre": "Science Fiction"
+  },
+  ...
+]
+```
+
+## 3. List Collections
+- **Endpoint**: `/api/collections`
+- **Description**: This endpoint allows you to retrieve a list of collections from the system.
+- **Method**: `GET`
+- **Response**:
+
+```json
+[
+  {
+    "collection_id": "5678",
+    "name": "Dune",
+    "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
+  },
+  ...
+]
+```
 # Database Schema
 
 ### Books Table
