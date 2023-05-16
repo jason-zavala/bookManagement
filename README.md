@@ -1,5 +1,6 @@
-# Book Management software
-A simple book management software.
+# Book Management Software
+The Book Management Package is a Go package designed to facilitate the management of books and collections of books. It provides a set of APIs for adding books, creating collections, listing books and collections, and filtering book lists based on various criteria. The package also includes a well-defined database schema for storing book and collection information.
+
 
 
 # Product Requirements
