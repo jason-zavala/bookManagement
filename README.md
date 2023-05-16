@@ -19,7 +19,7 @@ A simple book management software.
 ## 1. Add a Book
 
 - **Endpoint**: `/api/v1/books`
-- **Description**: This method is designed to add books to our Database.
+- **Description**: This endpoint allows you to add a book to the book management system. You need to provide the necessary information about the book, such as the title, author, published date, edition, description, and genre. After successfully adding the book, it will return the book ID and a status code.
 - **Method**: `POST`
 - **Request Payload**: 
 ```json
@@ -44,6 +44,7 @@ A simple book management software.
 ## 2. Create a Collection
 
 - **Endpoint**: `/api/v1/collections`
+- **Description**: This endpoint enables you to create a collection of books. You can specify the name and description of the collection. Upon successful creation, it will return the collection ID and a status code.
 - **Method**: `POST`
 - **Request Payload**:
 ```json
@@ -61,6 +62,7 @@ A simple book management software.
 }
 
 ```
+## 3. List Books
 
 # Database Schema
 
