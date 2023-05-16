@@ -19,8 +19,9 @@ A simple book management software.
 ## 1. Add a Book
 
 - **Endpoint**: `/api/v1/books`
+- **Description**: `This method is designed to add books to our Database.`
 - **Method**: `POST`
-- **Request Payload**:
+- **Request Payload**: sad
 ```json
 {
   "title": "The Book Title",
