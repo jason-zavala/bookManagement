@@ -24,12 +24,12 @@ A simple book management software.
 - **Request Payload**: 
 ```json
 {
-  "title": "The Book Title",
-  "author": "Author Name",
-  "published_date": "2023-05-01",
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "published_date": "1965-08-01",
   "edition": "1st Edition",
-  "description": "Book description",
-  "genre": "Fiction"
+  "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+  "genre": "Science Fiction"
 }
 ```
 - **Response**:
@@ -50,7 +50,7 @@ A simple book management software.
 ```json
 {
   "name": "Dune",
-  "description": "A collection of books about Dune"
+  "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
 }
 ```
 - **Response**:
