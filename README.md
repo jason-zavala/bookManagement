@@ -16,7 +16,7 @@ A simple book management software.
    
 # APIs
 
-### 1. Add a Book
+## 1. Add a Book
 
 - **Endpoint**: `/api/v1/books`
 - **Method**: `POST`
