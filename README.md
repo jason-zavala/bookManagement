@@ -100,7 +100,7 @@ A simple book management software.
 ]
 ```
 
-## 4. Filter Books
+## 5. Filter Books
 - **Endpoint**: `/api/books/filter`
 - **Description**: This endpoint allows you to filter book lists by author, genre, or a range of publication dates.
 - **Method**: `GET`
