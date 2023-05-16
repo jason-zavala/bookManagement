@@ -3,7 +3,7 @@ The Book Management Package is a Go package designed to facilitate the managemen
 
 
 
-# Product Requirements
+# Features
 
 **1. Add and manage books:** The software should allow users to add books to the system and manage them. It should capture basic information about each book, such as title, author, published date, edition, description, genre, and any other relevant details.
 
