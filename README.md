@@ -13,7 +13,26 @@ A simple book management software.
 **4. Filter book lists:** Users should be able to apply filters to book lists based on various criteria. These filters can include author, genre, or a range of publication dates. Filtering helps users narrow down their search and find specific books based on their preferences.
 
 
-## Database Schema
+   
+# APIs
+
+## 1. Add a Book
+
+- **Endpoint**: `/api/books`
+- **Method**: `POST`
+- **Request Payload**:
+```json
+{
+  "title": "The Book Title",
+  "author": "Author Name",
+  "published_date": "2023-05-01",
+  "edition": "1st Edition",
+  "description": "Book description",
+  "genre": "Fiction"
+}
+```
+
+# Database Schema
 
 ### Books Table
 
