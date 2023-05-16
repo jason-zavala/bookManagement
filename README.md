@@ -20,12 +20,12 @@ A simple book management software.
 | Column Name     | Data Type    | Description                                    |
 | --------------- | -------------| ---------------------------------------------- |
 | book_id         | Primary Key  | Unique identifier for the book                  |
-| title           |              | Title of the book                              |
-| author          |              | Author of the book                             |
-| published_date  |              | Publication date of the book                    |
-| edition         |              | Edition of the book                             |
-| description     |              | Description of the book                         |
-| genre           |              | Genre of the book                               |
+| title           |  String      | Title of the book                              |
+| author          |   String     | Author of the book                             |
+| published_date  |   Date       | Publication date of the book                    |
+| edition         |    Int       | Edition of the book                             |
+| description     |    String    | Description of the book                         |
+| genre           |    String    | Genre of the book                               |
 | ...             |              | (Additional columns as needed for relevant details) |
 
 ### Collections Table
@@ -33,8 +33,8 @@ A simple book management software.
 | Column Name     | Data Type    | Description                                    |
 | --------------- | -------------| ---------------------------------------------- |
 | collection_id   | Primary Key  | Unique identifier for the collection            |
-| name            |              | Name of the collection                          |
-| description     |              | Description of the collection                   |
+| name            |  String      | Name of the collection                          |
+| description     |  String      | Description of the collection                   |
 
 ### CollectionBooks Table (Many-to-Many Relationship)
 
