@@ -31,6 +31,35 @@ A simple book management software.
   "genre": "Fiction"
 }
 ```
+- **Response**:
+```json
+{
+  "book_id": "1234",
+  "staus": "200"
+}
+
+```
+
+## 2. Create a Collection
+
+- **Endpoint**: `/api/v1/collections`
+- **Method**: `POST`
+- **Request Payload**:
+```json
+{
+  "name": "Dune",
+  "description": "A collection of books about Dune"
+}
+```
+- **Response**:
+
+```json
+{
+  "collection_id": "5678",
+  "status": "200"
+}
+
+```
 
 # Database Schema
 
