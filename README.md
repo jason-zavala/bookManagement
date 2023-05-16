@@ -99,6 +99,38 @@ A simple book management software.
   ...
 ]
 ```
+
+## 4. Filter Books
+- **Endpoint**: `/api/books/filter`
+- **Description**: This endpoint allows you to filter book lists by author, genre, or a range of publication dates.
+- **Method**: `GET`
+- **Query Parameters**:
+  - `author`: Filter books by author name.
+  - `genre`: Filter books by genre.
+  - `from_date`: Filter books published from a specific date.
+  - `to_date`: Filter books published until a specific date.
+- **Example**:
+  ```bash
+  curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+
+  ```
+- **Response**:
+```json
+[
+  {
+    "book_id": "1234",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "published_date": "1965-08-01",
+    "edition": "1st Edition",
+    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "genre": "Science Fiction"
+  },
+  ...
+]
+
+```
+
 # Database Schema
 
 ### Books Table
