@@ -13,7 +13,19 @@ The Book Management Package is a Go package designed to facilitate the managemen
 
 **4. Filter book lists:** Users should be able to apply filters to book lists based on various criteria. These filters can include author, genre, or a range of publication dates. Filtering helps users narrow down their search and find specific books based on their preferences.
 
+# Usages
 
+```json
+curl -X POST -H "Content-Type: application/json" -d '{
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "published_date": "1965-08-01",
+  "edition": "1st Edition",
+  "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+  "genre": "Science Fiction"
+}' /api/books
+
+```
    
 # APIs
 
