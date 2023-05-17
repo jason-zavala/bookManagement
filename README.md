@@ -16,7 +16,7 @@ The Book Management Package is a Go package designed to facilitate the managemen
 # Usages
 ## 1. Adding a book to the system
 
-```json
+```curl
 curl -X POST -H "Content-Type: application/json" -d '{
   "title": "Dune",
   "author": "Frank Herbert",
