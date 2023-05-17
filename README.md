@@ -24,7 +24,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "edition": "1st Edition",
   "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
   "genre": "Science Fiction"
-}' /api/books
+}' /api/v1/books
 
 ```
 - **Example Response**:
@@ -48,7 +48,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 curl -X POST -H "Content-Type: application/json" -d '{
   "name": "Dune",
   "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
-}' /api/collections
+}' /api/v1/collections
 
 ```
 
@@ -74,7 +74,40 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ## 3. Listing books
 
 ```bash
-curl -X GET /api/books
+curl -X GET /api/v1/books
+```
+- **Example Response**:
+```json
+[
+  {
+    "book_id": "1234",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "published_date": "1965-08-01",
+    "edition": "1st Edition",
+    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "genre": "Science Fiction"
+  },
+  ...
+]
+```
+## 4. Listing collections
+
+```bash
+curl -X GET /api/v1/collections
+```
+
+- **Example Response**:
+
+```json
+[
+  {
+    "collection_id": "5678",
+    "name": "Dune",
+    "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
+  },
+  ...
+]
 ```
 # APIs
 
