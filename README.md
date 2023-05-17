@@ -109,6 +109,30 @@ curl -X GET /api/v1/collections
   ...
 ]
 ```
+
+## 5. Filter books
+
+```bash
+curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+
+```
+
+- **Example Response**:
+```json
+[
+  {
+    "book_id": "1234",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "published_date": "1965-08-01",
+    "edition": "1st Edition",
+    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "genre": "Science Fiction"
+  },
+  ...
+]
+
+```
 # APIs
 
 ## 1. Add a Book
