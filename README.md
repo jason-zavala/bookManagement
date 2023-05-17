@@ -70,6 +70,12 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "code": "400"
 }
 ```
+
+## 3. Listing books
+
+```bash
+curl -X GET /api/books
+```
 # APIs
 
 ## 1. Add a Book
