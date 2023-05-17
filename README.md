@@ -31,7 +31,8 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ```json
 {
   "book_id": "1234",
-  "staus": "200"
+  "staus": "success", 
+  "code": "200"
 }
 ```
    
@@ -57,7 +58,8 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ```json
 {
   "book_id": "1234",
-  "staus": "200"
+  "staus": "success", 
+  "code" : "200"
 }
 
 ```
@@ -79,7 +81,8 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ```json
 {
   "collection_id": "5678",
-  "status": "200"
+  "status": "success", 
+  "code" : "200"
 }
 
 ```
