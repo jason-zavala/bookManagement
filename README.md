@@ -43,7 +43,33 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "code": "400"
 }
 ```
+## 2. Creating a collection
+```curl
+curl -X POST -H "Content-Type: application/json" -d '{
+  "name": "Dune",
+  "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
+}' /api/collections
 
+```
+
+- **Example Response**:
+
+```json
+{
+  "collection_id": "5678",
+  "status": "success", 
+  "code" : "200"
+}
+
+```
+
+- **Example Error Response**:
+```json
+{
+  "staus": "error", 
+  "code": "400"
+}
+```
 # APIs
 
 ## 1. Add a Book
