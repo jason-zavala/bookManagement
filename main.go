@@ -1,18 +1,23 @@
 package main
 
 import (
-	books "bookManagement/routes"
+	routes "bookManagement/routes"
 	"log"
 	"net/http"
 )
 
 func main() {
-	// Register the handler for the /api/v1/books endpoint
+	// api/v1/books endpoint
 	injectedDB := "database.db"
 	http.HandleFunc("/api/v1/books", func(w http.ResponseWriter, r *http.Request) {
-		books.AddBookHandler(w, r, injectedDB)
+		routes.AddBookHandler(w, r, injectedDB)
 	})
-	// Start the HTTP server
+
+	// api/v1/collection endpoints
+	http.HandleFunc("/api/v1/collections", func(w http.ResponseWriter, r *http.Request) {
+		routes.AddCollectionHandler(w, r, injectedDB)
+	})
+
 	log.Println("Server listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
