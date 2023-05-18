@@ -51,8 +51,9 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 	if book.Author == "" || book.Title == "" {
 		// Return error response
 		response := Response{
-			Status: "error",
-			Code:   "400",
+			Status:  "error",
+			Message: "Request to add book must include Author, and Title at a minimum.",
+			Code:    "400",
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
