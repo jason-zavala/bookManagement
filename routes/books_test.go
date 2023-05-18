@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-var testDB string = "testDatabase.db"
+var testDB string = "testDB.db"
 
 func TestAddBookHandlerSuccess(t *testing.T) {
 	// Create a sample book payload
@@ -76,8 +76,8 @@ func TestAddBookHandlerFail(t *testing.T) {
 	AddBookHandler(r, req, testDB)
 
 	// Check the response status code
-	if r.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, got %d", http.StatusOK, r.Code)
+	if r.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, got %d", http.StatusBadRequest, r.Code)
 	}
 
 	// Check the response body
