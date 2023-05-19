@@ -22,9 +22,9 @@ curl -X POST -H "Content-Type: application/json" -d '{
   "author": "Frank Herbert",
   "published_date": "1965-08-01",
   "edition": "1st Edition",
-  "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+  "description": "Paul MuadDib leads the Fremen on a conquest of revenge",
   "genre": "Science Fiction"
-}' /api/v1/books
+}' http://localhost:8080/api/v1/books
 
 ```
 - **Example Response**:
@@ -47,8 +47,8 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ```curl
 curl -X POST -H "Content-Type: application/json" -d '{
   "name": "Dune",
-  "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
-}' /api/v1/collections
+  "description": "The collected sayings of MuadDib (by the Princess Irulan)."
+}' http://localhost:8080/api/v1/collections
 
 ```
 
@@ -74,7 +74,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 ## 3. Listing books
 
 ```bash
-curl -X GET /api/v1/books
+curl -X GET http://localhost:8080/api/v1/books
 ```
 - **Example Response**:
 ```json
@@ -85,16 +85,24 @@ curl -X GET /api/v1/books
     "author": "Frank Herbert",
     "published_date": "1965-08-01",
     "edition": "1st Edition",
-    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "description": "Paul MuadDib leads the Fremen on a conquest of revenge",
     "genre": "Science Fiction"
   },
   ...
 ]
 ```
+- **Example Error Response**:
+```json
+{
+  "staus": "error", 
+  "code": "500"
+}
+```
+
 ## 4. Listing collections
 
 ```bash
-curl -X GET /api/v1/collections
+curl -X GET http://localhost:8080/api/v1/collections
 ```
 
 - **Example Response**:
@@ -104,7 +112,7 @@ curl -X GET /api/v1/collections
   {
     "collection_id": "5678",
     "name": "Dune",
-    "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
+    "description": "The collected sayings of MuadDib (by the Princess Irulan)."
   },
   ...
 ]
@@ -113,7 +121,7 @@ curl -X GET /api/v1/collections
 ## 5. Filter books
 
 ```bash
-curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
 
 ```
 
@@ -126,7 +134,7 @@ curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960
     "author": "Frank Herbert",
     "published_date": "1965-08-01",
     "edition": "1st Edition",
-    "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+    "description": "Paul MuadDib leads the Fremen on a conquest of revenge",
     "genre": "Science Fiction"
   },
   ...
@@ -134,7 +142,6 @@ curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960
 
 ```
 # APIs
-
 ## 1. Add a Book
 
 - **Endpoint**: `/api/v1/books`
@@ -147,7 +154,7 @@ curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960
   "author": "Frank Herbert",
   "published_date": "1965-08-01",
   "edition": "1st Edition",
-  "description": "Paul Muad'Dib leads the Fremen on a conquest of revenge",
+  "description": "Paul MuadDib leads the Fremen on a conquest of revenge",
   "genre": "Science Fiction"
 }
 ```
@@ -170,7 +177,7 @@ curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960
 ```json
 {
   "name": "Dune",
-  "description": "The collected sayings of Muad'Dib (by the Princess Irulan)."
+  "description": "The collected sayings of MuadDib (by the Princess Irulan)."
 }
 ```
 - **Response**:

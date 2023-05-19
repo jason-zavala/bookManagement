@@ -61,12 +61,9 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		return
 	}
 	// Check if the book already exists
-	checkBookQuery := `
-		SELECT book_id FROM Books
-		WHERE title = ? AND author = ? AND edition = ?;
-	`
+	checkBookQuery := "SELECT book_id FROM Books WHERE title = ? AND author = ?;"
 	var existingBookID int64
-	err = db.QueryRow(checkBookQuery, book.Title, book.Author, book.Edition).Scan(&existingBookID)
+	err = db.QueryRow(checkBookQuery, book.Title, book.Author).Scan(&existingBookID)
 	if err == nil {
 		// Book already exists, return existing book ID
 		response := Response{
@@ -80,8 +77,9 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 	} else if err != sql.ErrNoRows {
 		// Error occurred during the database query
 		response := Response{
-			Status: "error",
-			Code:   "500",
+			Status:  "error",
+			Message: "Something went wrong with the database Query",
+			Code:    "500",
 		}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
@@ -97,8 +95,9 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 	if err != nil {
 		// Return error response
 		response := Response{
-			Status: "error",
-			Code:   "500",
+			Status:  "error",
+			Message: "Failed to save book to database",
+			Code:    "500",
 		}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
