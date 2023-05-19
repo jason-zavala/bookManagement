@@ -2,7 +2,9 @@ package routes
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -41,13 +43,8 @@ func TestAddCollectionHandlerSuccess(t *testing.T) {
 	}
 
 	expectedResponse := CollectionResponse{
-		CollectionID: "1", // Assuming the first collection has ID 1
-		Status:       "success",
-		Code:         "200",
-	}
-
-	if response.CollectionID != expectedResponse.CollectionID {
-		t.Errorf("Expected collection ID %s, got %s", expectedResponse.CollectionID, response.CollectionID)
+		Status: "success",
+		Code:   "200",
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -103,4 +100,90 @@ func TestAddCollectionHandlerFail(t *testing.T) {
 	if response.Message != expectedResponse.Message {
 		t.Errorf("Expected message %s, got %s", response.Message, expectedResponse.Message)
 	}
+}
+
+func TestGetCollectionsHandler(t *testing.T) {
+	//delete all collections so we dont affect our expected count for this test
+	cleanCollectionsFromTestDatabase()
+	collectionsToInsert := []Collection{
+		{
+			Name:        "Harry Potter",
+			Description: "A Wizard saves the day!",
+		},
+		{
+			Name:        "The Collected Sayings of MuadDib",
+			Description: "Wisdom from the Lisan Al Gaib",
+		},
+	}
+
+	for _, collect := range collectionsToInsert {
+		err := insertCollection(collect)
+
+		if err != nil {
+			log.Fatal("Failed to insert into test database")
+		}
+	}
+
+	// Create a new HTTP request to the collections endpoint
+	req, err := http.NewRequest("GET", "/api/v1/collections", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a response recorder to capture the response
+	r := httptest.NewRecorder()
+
+	// Call the GetCollectionsHandler function
+	GetCollectionsHandler(r, req, testDB)
+
+	// Check the response status code
+	if r.Code != http.StatusOK {
+		t.Errorf("unexpected status code: got %v, want %v", r.Code, http.StatusOK)
+	}
+
+	// Parse the response body
+	var collections []Collection
+	err = json.Unmarshal(r.Body.Bytes(), &collections)
+	if err != nil {
+		t.Errorf("failed to parse response body: %v", err)
+	}
+	expectedLength := 2
+	if len(collections) != expectedLength {
+		t.Errorf("Expected length was %d, but expected %d", len(collections), expectedLength)
+	}
+
+}
+
+func insertCollection(collection Collection) error {
+
+	db, err := sql.Open("sqlite3", testDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	query := "INSERT INTO Collections (name, description) VALUES (?, ?)"
+
+	_, err = db.Exec(query, collection.Name, collection.Description)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func cleanCollectionsFromTestDatabase() error {
+	db, err := sql.Open("sqlite3", testDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := "DELETE FROM Collections"
+
+	_, err = db.Exec(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

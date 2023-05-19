@@ -10,8 +10,9 @@ import (
 )
 
 type Collection struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	CollectionID string `json:"collection_id,omitempty"`
+	Name         string `json:"name"`
+	Description  string `json:"description"`
 }
 
 type CollectionResponse struct {
@@ -101,4 +102,46 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func GetCollectionsHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
+	db, err := sql.Open("sqlite3", injectedDB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Query the database to get all collections
+	query := "SELECT collection_id, name, description FROM Collections"
+	rows, err := db.Query(query)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	// Iterate over the rows and create a list of collections
+	var collections []Collection
+	for rows.Next() {
+		var collection Collection
+		err := rows.Scan(&collection.CollectionID, &collection.Name, &collection.Description)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		collections = append(collections, collection)
+	}
+
+	// Check for any errors during row iteration
+	err = rows.Err()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Encode the collections list as JSON and send the response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(collections)
 }
