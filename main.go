@@ -24,6 +24,8 @@ func main() {
 	http.HandleFunc("/api/v1/collections", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {
 			routes.AddCollectionHandler(w, r, injectedDB)
+		} else if r.Method == "GET" {
+			routes.GetCollectionsHandler(w, r, injectedDB)
 		} else {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
