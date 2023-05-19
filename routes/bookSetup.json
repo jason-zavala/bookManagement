@@ -1,0 +1,203 @@
+[
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "published_date": "1960",
+      "edition": "First Edition",
+      "description": "A story of racial injustice and the loss of innocence",
+      "genre": "Fiction"
+    },
+    {
+      "title": "1984",
+      "author": "George Orwell",
+      "published_date": "1949",
+      "edition": "First Edition",
+      "description": "A dystopian novel portraying a totalitarian society",
+      "genre": "Science Fiction"
+    },
+    {
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "published_date": "1813",
+      "edition": "First Edition",
+      "description": "A classic romance novel set in Georgian England",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "published_date": "1925",
+      "edition": "First Edition",
+      "description": "A portrayal of the Jazz Age and American Dream",
+      "genre": "Fiction"
+    },
+    {
+      "title": "Moby-Dick",
+      "author": "Herman Melville",
+      "published_date": "1851",
+      "edition": "First Edition",
+      "description": "A whaling adventure and exploration of obsession",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Lord of the Rings",
+      "author": "J.R.R. Tolkien",
+      "published_date": "1954",
+      "edition": "First Edition",
+      "description": "A fantasy epic set in Middle-earth",
+      "genre": "Fantasy"
+    },
+    {
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "published_date": "1951",
+      "edition": "First Edition",
+      "description": "A coming-of-age story of teenage angst",
+      "genre": "Fiction"
+    },
+    {
+      "title": "To the Lighthouse",
+      "author": "Virginia Woolf",
+      "published_date": "1927",
+      "edition": "First Edition",
+      "description": "A modernist novel exploring consciousness",
+      "genre": "Literary Fiction"
+    },
+    {
+      "title": "Brave New World",
+      "author": "Aldous Huxley",
+      "published_date": "1932",
+      "edition": "First Edition",
+      "description": "A dystopian society controlled by technology",
+      "genre": "Science Fiction"
+    },
+    {
+      "title": "The Odyssey",
+      "author": "Homer",
+      "published_date": "800 BCE",
+      "edition": "N/A",
+      "description": "An epic poem of Odysseus' journey home",
+      "genre": "Classic"
+    },
+    {
+      "title": "Jane Eyre",
+      "author": "Charlotte Brontë",
+      "published_date": "1847",
+      "edition": "First Edition",
+      "description": "A Gothic romance and bildungsroman",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Adventures of Huckleberry Finn",
+      "author": "Mark Twain",
+      "published_date": "1884",
+      "edition": "First Edition",
+      "description": "A satirical depiction of racism and slavery",
+      "genre": "Fiction"
+    },
+    {
+      "title": "Alice's Adventures in Wonderland",
+      "author": "Lewis Carroll",
+      "published_date": "1865",
+      "edition": "First Edition",
+      "description": "A whimsical tale of a girl's adventures",
+      "genre": "Fantasy"
+    },
+    {
+      "title": "War and Peace",
+      "author": "Leo Tolstoy",
+      "published_date": "1869",
+      "edition": "First Edition",
+      "description": "A historical novel set during the Napoleonic era",
+      "genre": "Historical Fiction"
+    },
+    {
+      "title": "Crime and Punishment",
+      "author": "Fyodor Dostoevsky",
+      "published_date": "1866",
+      "edition": "First Edition",
+      "description": "A psychological exploration of guilt and redemption",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "published_date": "1937",
+      "edition": "First Edition",
+      "description": "A children's fantasy novel prequel to The Lord of the Rings",
+      "genre": "Fantasy"
+    },
+    {
+      "title": "Wuthering Heights",
+      "author": "Emily Brontë",
+      "published_date": "1847",
+      "edition": "First Edition",
+      "description": "A tale of love and revenge on the Yorkshire moors",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Divine Comedy",
+      "author": "Dante Alighieri",
+      "published_date": "1320",
+      "edition": "N/A",
+      "description": "A poetic journey through Hell, Purgatory, and Heaven",
+      "genre": "Classic"
+    },
+    {
+      "title": "The Grapes of Wrath",
+      "author": "John Steinbeck",
+      "published_date": "1939",
+      "edition": "First Edition",
+      "description": "A portrayal of the Great Depression and migrant workers",
+      "genre": "Fiction"
+    },
+    {
+      "title": "One Hundred Years of Solitude",
+      "author": "Gabriel García Márquez",
+      "published_date": "1967",
+      "edition": "First Edition",
+      "description": "A magical realist epic of the Buendía family",
+      "genre": "Fiction"
+    },
+    {
+      "title": "Don Quixote",
+      "author": "Miguel de Cervantes",
+      "published_date": "1605",
+      "edition": "First Edition",
+      "description": "A satirical novel of a knight-errant and his squire",
+      "genre": "Classic"
+    },
+    {
+      "title": "Frankenstein",
+      "author": "Mary Shelley",
+      "published_date": "1818",
+      "edition": "First Edition",
+      "description": "A Gothic science fiction novel about a monster",
+      "genre": "Science Fiction"
+    },
+    {
+      "title": "The Picture of Dorian Gray",
+      "author": "Oscar Wilde",
+      "published_date": "1890",
+      "edition": "First Edition",
+      "description": "A philosophical novel about the pursuit of pleasure",
+      "genre": "Fiction"
+    },
+    {
+      "title": "Anna Karenina",
+      "author": "Leo Tolstoy",
+      "published_date": "1877",
+      "edition": "First Edition",
+      "description": "A tragic love story set in 19th-century Russia",
+      "genre": "Fiction"
+    },
+    {
+      "title": "The Scarlet Letter",
+      "author": "Nathaniel Hawthorne",
+      "published_date": "1850",
+      "edition": "First Edition",
+      "description": "A novel exploring sin, guilt, and redemption",
+      "genre": "Fiction"
+    }
+  ]
+  

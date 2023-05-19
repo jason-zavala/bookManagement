@@ -10,6 +10,7 @@ import (
 )
 
 type Book struct {
+	BookID        string `json:"book_id,omitempty"`
 	Title         string `json:"title"`
 	Author        string `json:"author"`
 	PublishedDate string `json:"published_date"`
@@ -116,4 +117,46 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func GetBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
+	db, err := sql.Open("sqlite3", injectedDB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Query the database to get all books. Even tho we could use Select * notation here, we use the col names for clarity and readability
+	query := "SELECT book_id, title, author, published_date, edition, description, genre FROM Books"
+	rows, err := db.Query(query)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	// Iterate over the rows and create a list of books
+	var books []Book
+	for rows.Next() {
+		var book Book
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.PublishedDate, &book.Edition, &book.Description, &book.Genre)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		books = append(books, book)
+	}
+
+	// Check for any errors during row iteration
+	err = rows.Err()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// Encode the books list as JSON and send the response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(books)
 }
