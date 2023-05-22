@@ -3,7 +3,6 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -259,10 +258,4 @@ func FilterBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB strin
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(respJSON)
-
-	fmt.Println("Query: ", query)
-	fmt.Println("args: ")
-	for _, arg := range args {
-		fmt.Println(arg)
-	}
 }

@@ -113,7 +113,7 @@ func TestAddBookHandlerFail(t *testing.T) {
 
 func TestGetBooksHandler(t *testing.T) {
 	//setup
-	getBooksHandlerTestHelper()
+	databasePopulationHelper()
 	defer cleanTestDatabase()
 
 	// Create a request
@@ -123,19 +123,19 @@ func TestGetBooksHandler(t *testing.T) {
 	}
 
 	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
+	r := httptest.NewRecorder()
 
 	// Call the GetBooksHandler function with the request and response recorder
-	GetBooksHandler(recorder, req, testDB)
+	GetBooksHandler(r, req, testDB)
 
 	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, got %d", http.StatusOK, recorder.Code)
+	if r.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, got %d", http.StatusOK, r.Code)
 	}
 
 	// Check the response body
 	var books []Book
-	err = json.Unmarshal(recorder.Body.Bytes(), &books)
+	err = json.Unmarshal(r.Body.Bytes(), &books)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -147,7 +147,95 @@ func TestGetBooksHandler(t *testing.T) {
 	}
 }
 
-func getBooksHandlerTestHelper() {
+func TestBookFilterHandlerOneResult(t *testing.T) {
+	databasePopulationHelper()
+	defer cleanTestDatabase()
+	// Create a new request with the desired query parameters
+	req, err := http.NewRequest("GET", "/api/v1/filter?title=1984", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	r := httptest.NewRecorder()
+	FilterBooksHandler(r, req, testDB)
+
+	if r.Code != http.StatusOK {
+		t.Errorf("Expected status %v, got %v", http.StatusOK, r.Code)
+	}
+
+	var book []Book
+	err = json.Unmarshal(r.Body.Bytes(), &book)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Should only have returned 1 book
+	if len(book) != 1 {
+		t.Error("Expected one book got ", len(book))
+	}
+}
+
+func TestBookFilterHandlerMultipleResults(t *testing.T) {
+	databasePopulationHelper()
+	defer cleanTestDatabase()
+	// Create a new request with the desired query parameters
+	req, err := http.NewRequest("GET", "/api/v1/filter?genre=Fiction", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	r := httptest.NewRecorder()
+	FilterBooksHandler(r, req, testDB)
+
+	if r.Code != http.StatusOK {
+		t.Errorf("Expected status %v, got %v", http.StatusOK, r.Code)
+	}
+
+	var book []Book
+	err = json.Unmarshal(r.Body.Bytes(), &book)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// There should be 14 books here in the fiction genre
+	if len(book) != 14 {
+		t.Error("Expected one book got ", len(book))
+	}
+}
+
+func TestBookFilterHandlerLongFilterURL(t *testing.T) {
+	databasePopulationHelper()
+	defer cleanTestDatabase()
+	// Create a new request with the desired query parameters
+	req, err := http.NewRequest("GET", "/api/v1/filter?author=J.R.R.%20Tolkien&genre=Fantasy", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	r := httptest.NewRecorder()
+	FilterBooksHandler(r, req, testDB)
+
+	if r.Code != http.StatusOK {
+		t.Errorf("Expected status %v, got %v", http.StatusOK, r.Code)
+	}
+
+	var books []Book
+	err = json.Unmarshal(r.Body.Bytes(), &books)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// There should be 2 books here in the fiction genre
+	if len(books) != 2 {
+		t.Error("Expected one book got ", len(books))
+	}
+
+	expectedTitles := []string{"The Lord of the Rings", "The Hobbit"}
+	for i, book := range books {
+		if book.Title != expectedTitles[i] {
+			t.Errorf("Expected title '%s', got '%s'", expectedTitles[i], book.Title)
+		}
+	}
+}
+
+func databasePopulationHelper() {
 	db, err := sql.Open("sqlite3", testDB)
 	if err != nil {
 		log.Fatal(err)
