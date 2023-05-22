@@ -32,6 +32,11 @@ func main() {
 
 	})
 
+	//filter endpoint
+	http.HandleFunc("/api/v1/filter", func(w http.ResponseWriter, r *http.Request) {
+		routes.FilterBooksHandler(w, r, injectedDB)
+	})
+
 	log.Println("Server listening on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

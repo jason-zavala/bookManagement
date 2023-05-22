@@ -3,7 +3,9 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -158,4 +160,109 @@ func GetBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB string) 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(books)
+}
+
+func FilterBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
+	queryParams, err := url.ParseQuery(r.URL.RawQuery)
+
+	if err != nil {
+		response := Response{
+			Status:  "error",
+			Message: "Incorrectly formatted filter parameters",
+			Code:    "400",
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	//extract values from queryParams
+	title := queryParams.Get("title")
+	author := queryParams.Get("author")
+	genre := queryParams.Get("genre")
+	fromDate := queryParams.Get("fromData")
+	toDate := queryParams.Get("toData")
+
+	db, err := sql.Open("sqlite3", injectedDB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	//we need the 1=1 so we can dynamically append to the end of the query here
+	query := "SELECT book_id, title, author, published_date, edition, description, genre FROM books WHERE 1=1"
+	args := make([]interface{}, 0)
+
+	if title != "" {
+		query += " AND title = ?"
+		args = append(args, title)
+	}
+	if author != "" {
+		query += " AND author = ?"
+		args = append(args, author)
+	}
+	if genre != "" {
+		query += " AND genre = ?"
+		args = append(args, genre)
+	}
+	if fromDate != "" {
+		query += " AND published_date >= ?"
+		args = append(args, fromDate)
+	}
+	if toDate != "" {
+		query += " AND published_date <= ?"
+		args = append(args, toDate)
+	}
+
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	defer rows.Close()
+
+	books := make([]Book, 0)
+
+	for rows.Next() {
+		var book Book
+		err = rows.Scan(
+			&book.BookID,
+			&book.Title,
+			&book.Author,
+			&book.PublishedDate,
+			&book.Edition,
+			&book.Description,
+			&book.Genre,
+		)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		books = append(books, book)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	respJSON, err := json.Marshal(books)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(respJSON)
+
+	fmt.Println("Query: ", query)
+	fmt.Println("args: ")
+	for _, arg := range args {
+		fmt.Println(arg)
+	}
 }
