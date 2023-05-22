@@ -133,7 +133,13 @@ curl -X POST -H "Content-Type: application/json" -d '
   "code": "200"
 }
 ```
-
+- **Example Error Response**:
+```json
+{
+  "staus": "error", 
+  "code": "500"
+}
+```
 ## 6. Filter books
 
 ```bash
