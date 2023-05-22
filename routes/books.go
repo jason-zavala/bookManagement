@@ -189,7 +189,6 @@ func FilterBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB strin
 	}
 	defer db.Close()
 
-	//we need the 1=1 so we can dynamically append to the end of the query here
 	query := "SELECT book_id, title, author, published_date, edition, description, genre FROM books WHERE 1=1"
 	args := make([]interface{}, 0)
 

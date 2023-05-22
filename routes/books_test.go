@@ -114,7 +114,7 @@ func TestAddBookHandlerFail(t *testing.T) {
 func TestGetBooksHandler(t *testing.T) {
 	//setup
 	databasePopulationHelper()
-	defer cleanDatabase()
+	defer cleanBooksTable()
 
 	// Create a request
 	req, err := http.NewRequest("GET", "/api/v1/books", nil)
@@ -149,7 +149,7 @@ func TestGetBooksHandler(t *testing.T) {
 
 func TestBookFilterHandlerOneResult(t *testing.T) {
 	databasePopulationHelper()
-	defer cleanDatabase()
+	defer cleanBooksTable()
 	// Create a new request with the desired query parameters
 	req, err := http.NewRequest("GET", "/api/v1/filter?title=1984", nil)
 	if err != nil {
@@ -176,7 +176,7 @@ func TestBookFilterHandlerOneResult(t *testing.T) {
 
 func TestBookFilterHandlerMultipleResults(t *testing.T) {
 	databasePopulationHelper()
-	defer cleanDatabase()
+	defer cleanBooksTable()
 	// Create a new request with the desired query parameters
 	req, err := http.NewRequest("GET", "/api/v1/filter?genre=Fiction", nil)
 	if err != nil {
@@ -203,9 +203,9 @@ func TestBookFilterHandlerMultipleResults(t *testing.T) {
 
 func TestBookFilterHandlerLongFilterURL(t *testing.T) {
 	databasePopulationHelper()
-	defer cleanDatabase()
+	defer cleanBooksTable()
 	// Create a new request with the desired query parameters
-	req, err := http.NewRequest("GET", "/api/v1/filter?author=J.R.R.%20Tolkien&genre=Fantasy", nil)
+	req, err := http.NewRequest("GET", "/api/v1/filter?author=J.R.R.+Tolkien&genre=Fantasy", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -281,7 +281,7 @@ func readJSON(filename string) ([]Book, error) {
 
 func insertBookIntoDatabase(db *sql.DB, books []Book) error {
 	// Just making sure the db is empty so we can accurately get the count
-	cleanDatabase()
+	cleanBooksTable()
 
 	query := "INSERT INTO Books (title, author, published_date, edition, description, genre) VALUES (?, ?, ?, ?, ?, ?)"
 	for _, book := range books {
@@ -294,7 +294,7 @@ func insertBookIntoDatabase(db *sql.DB, books []Book) error {
 	return nil
 }
 
-func cleanDatabase() error {
+func cleanBooksTable() error {
 	db, err := sql.Open("sqlite3", testDB)
 
 	if err != nil {

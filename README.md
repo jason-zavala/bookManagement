@@ -117,8 +117,24 @@ curl -X GET http://localhost:8080/api/v1/collections
   ...
 ]
 ```
+## 5. Add a Book to a Collection
+```bash
+curl -X POST -H "Content-Type: application/json" -d '
+{
+  "book_id": "1234",
+  "collection_id": "5678"
+}' http://localhost:8080/api/v1/bookToCollection
 
-## 5. Filter books
+```
+- **Example Response**:
+```json
+{
+  "status": "success",
+  "code": "200"
+}
+```
+
+## 6. Filter books
 
 ```bash
 curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
@@ -227,9 +243,34 @@ curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20F
   ...
 ]
 ```
+## 5. Add a Book to a Collection 
+- **Endpoint**: `/api/v1/bookToCollection`
+- **Description**: This endpoint allows you to add a book to a specific collection in the book management system. You need to provide the book ID and collection ID to associate the book with the collection. After successfully adding the book to the collection, it will return a status code indicating the success of the operation.
+- **Method**: `POST`
+- **Request Payload**: 
+```json
+{
+  "book_id": "1234",
+  "collection_id": "5678"
+}
+```
+- **Example Response**:
+```json
+{
+  "status": "success",
+  "code": "200"
+}
+```
 
-## 5. Filter Books
-- **Endpoint**: `/api/books/filter`
+- **Example Error Response**:
+```json
+{
+  "status": "error",
+  "code": "400"
+}
+```
+## 6. Filter Books
+- **Endpoint**: `/api/v1/books/filter`
 - **Description**: This endpoint allows you to filter book lists by author, genre, or a range of publication dates.
 - **Method**: `GET`
 - **Query Parameters**:
@@ -239,7 +280,7 @@ curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20F
   - `to_date`: Filter books published until a specific date.
 - **Example**:
   ```bash
-  curl -X GET '/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+  curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
 
   ```
 - **Response**:

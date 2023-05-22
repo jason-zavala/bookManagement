@@ -3,8 +3,10 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -144,4 +146,116 @@ func GetCollectionsHandler(w http.ResponseWriter, r *http.Request, injectedDB st
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(collections)
+}
+
+func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
+	db, err := sql.Open("sqlite3", injectedDB)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	var collectionToBookData struct {
+		CollectionID string   `json:"collection_id"`
+		BookIDs      []string `json:"book_ids"`
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&collectionToBookData)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// Check if the collection exists
+	var existingCollectionID string
+	err = db.QueryRow("SELECT collection_id FROM Collections WHERE collection_id = ?;", collectionToBookData.CollectionID).Scan(&existingCollectionID)
+	if err == sql.ErrNoRows {
+		response := Response{
+			Status:  "error",
+			Code:    "404",
+			Message: "Collection not found",
+		}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		return
+	} else if err != nil {
+		response := Response{
+			Status: "error",
+			Code:   "500",
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// Check if the books exist
+	var existingBooks []string
+	checkBooksQuery := fmt.Sprintf("SELECT book_id FROM Books WHERE book_id IN ('%s');", strings.Join(collectionToBookData.BookIDs, "','"))
+	rows, err := db.Query(checkBooksQuery)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var bookID string
+		err := rows.Scan(&bookID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		existingBooks = append(existingBooks, bookID)
+	}
+
+	// Check if any books were not found
+	missingBooks := make([]string, 0)
+	for _, bookID := range collectionToBookData.BookIDs {
+		found := false
+		for _, existingBookID := range existingBooks {
+			if bookID == existingBookID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			missingBooks = append(missingBooks, bookID)
+		}
+	}
+
+	if len(missingBooks) > 0 {
+		response := Response{
+			Status:  "error",
+			Message: fmt.Sprintf("Books not found: %s", strings.Join(missingBooks, ", ")),
+			Code:    "404",
+		}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// Insert books into the collection
+	insertQuery := `INSERT INTO CollectionBooks (collection_id, book_id) VALUES (?, ?);`
+	for _, bookID := range collectionToBookData.BookIDs {
+		_, err := db.Exec(insertQuery, collectionToBookData.CollectionID, bookID)
+		if err != nil {
+			response := Response{
+				Status:  "error",
+				Message: fmt.Sprintf("Failed to write %s into database", bookID),
+				Code:    "500",
+			}
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+	}
+
+	response := Response{
+		Status: "success",
+		Code:   "200",
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
