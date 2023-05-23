@@ -249,7 +249,7 @@ curl -X GET 'http://localhost:8080/api/filter?title=Dune&genre=Science%20Fiction
 ]
 ```
 ## 5. Add a Book to a Collection 
-- **Endpoint**: `/api/v1/bookToCollection`
+- **Endpoint**: `/api/v1/booksToCollection`
 - **Description**: This endpoint allows you to add a book to a specific collection in the book management system. You need to provide the book ID and collection ID to associate the book with the collection. After successfully adding the book to the collection, it will return a status code indicating the success of the operation.
 - **Method**: `POST`
 - **Request Payload**: 
