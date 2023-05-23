@@ -119,13 +119,12 @@ curl -X GET http://localhost:8080/api/v1/collections
 ```
 ## 5. Add a Book to a Collection
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '
-{
-  "book_id": "1234",
-  "collection_id": "5678"
+curl -X POST -H "Content-Type: application/json" -d '{
+  "collection_id": "5678",
+  "book_ids": ["1234"]
 }' http://localhost:8080/api/v1/booksToCollection
-
 ```
+
 - **Example Response**:
 ```json
 {
@@ -256,8 +255,8 @@ curl -X GET 'http://localhost:8080/api/filter?title=Dune&genre=Science%20Fiction
 - **Request Payload**: 
 ```json
 {
-  "book_id": "1234",
-  "collection_id": "5678"
+  "collection_id": "5678",
+  "book_ids": ["4", "8", "15", "16", "23", "42"]
 }
 ```
 - **Example Response**:

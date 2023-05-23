@@ -39,7 +39,7 @@ func main() {
 
 	//booksToCollection endpoint
 	http.HandleFunc("/api/v1/booksToCollection", func(w http.ResponseWriter, r *http.Request) {
-		routes.FilterBooksHandler(w, r, injectedDB)
+		routes.AddBookToCollectionHandler(w, r, injectedDB)
 	})
 
 	log.Println("Server listening on http://localhost:8080")

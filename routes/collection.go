@@ -15,6 +15,7 @@ type Collection struct {
 	CollectionID string `json:"collection_id,omitempty"`
 	Name         string `json:"name"`
 	Description  string `json:"description"`
+	Books        []Book `json:"books"`
 }
 
 type CollectionResponse struct {
@@ -132,6 +133,31 @@ func GetCollectionsHandler(w http.ResponseWriter, r *http.Request, injectedDB st
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+
+		// Query the database to get books associated with the collection
+		bookQuery := "SELECT b.book_id, b.title, b.author FROM Books b INNER JOIN CollectionBooks cb ON b.book_id = cb.book_id WHERE cb.collection_id = ?"
+		bookRows, err := db.Query(bookQuery, collection.CollectionID)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		defer bookRows.Close()
+
+		// Iterate over the book rows and create a list of books for the collection
+		var books []Book
+		for bookRows.Next() {
+			var book Book
+			err := bookRows.Scan(&book.BookID, &book.Title, &book.Author)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			books = append(books, book)
+		}
+
+		// Assign the books to the collection
+		collection.Books = books
+
 		collections = append(collections, collection)
 	}
 
@@ -197,6 +223,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	defer rows.Close()
 
 	for rows.Next() {
