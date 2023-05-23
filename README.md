@@ -123,7 +123,7 @@ curl -X POST -H "Content-Type: application/json" -d '
 {
   "book_id": "1234",
   "collection_id": "5678"
-}' http://localhost:8080/api/v1/bookToCollection
+}' http://localhost:8080/api/v1/booksToCollection
 
 ```
 - **Example Response**:
@@ -143,7 +143,7 @@ curl -X POST -H "Content-Type: application/json" -d '
 ## 6. Filter books
 
 ```bash
-curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+curl -X GET 'http://localhost:8080/api/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
 
 ```
 
