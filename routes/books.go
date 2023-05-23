@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -48,56 +49,42 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	//sanity checks here, things like making sure we at least have a title and author,
 
+	// Sanity checks, making sure we have at least a title and author
 	if book.Author == "" || book.Title == "" {
 		// Return error response
 		response := Response{
 			Status:  "error",
-			Message: "Request to add book must include Author, and Title at a minimum.",
+			Message: "Request to add book must include Author and Title at a minimum.",
 			Code:    "400",
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	// Check if the book already exists
-	checkBookQuery := "SELECT book_id FROM Books WHERE title = ? AND author = ?;"
-	var existingBookID int64
-	err = db.QueryRow(checkBookQuery, book.Title, book.Author).Scan(&existingBookID)
-	if err == nil {
-		// Book already exists, return existing book ID
-		response := Response{
-			Status: "success",
-			Code:   "200",
-			BookID: strconv.FormatInt(existingBookID, 10),
-		}
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(response)
-		return
-	} else if err != sql.ErrNoRows {
-		// Error occurred during the database query
+
+	// Parse the published date string
+	publishedDate, err := parseDate(book.PublishedDate)
+	if err != nil {
+		// Return error response if the date parsing fails
 		response := Response{
 			Status:  "error",
-			Message: "Something went wrong with the database Query",
-			Code:    "500",
+			Message: "Failed to parse the published date. Valid formats for the date include YYYY, YYYY-MM, and YYYY-MM-DD",
+			Code:    "400",
 		}
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	// Save the book to the database
-	insertBookQuery := `
-		INSERT INTO Books (title, author, published_date, edition, description, genre)
-		VALUES (?, ?, ?, ?, ?, ?);
-	`
-	result, err := db.Exec(insertBookQuery, book.Title, book.Author, book.PublishedDate, book.Edition, book.Description, book.Genre)
+	insertBookQuery := "INSERT INTO Books (title, author, published_date, edition, description, genre)VALUES (?, ?, ?, ?, ?, ?);"
+	result, err := db.Exec(insertBookQuery, book.Title, book.Author, publishedDate, book.Edition, book.Description, book.Genre)
 	if err != nil {
 		// Return error response
 		response := Response{
 			Status:  "error",
-			Message: "Failed to save book to database",
+			Message: "Failed to save book to the database",
 			Code:    "500",
 		}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -105,7 +92,7 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		return
 	}
 
-	// Generate the unique book ID
+	// retrieve the unique book ID
 	bookID, _ := result.LastInsertId()
 
 	// Return success response
@@ -257,4 +244,18 @@ func FilterBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB strin
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(respJSON)
+}
+
+// This is a helper function to parse the dates because in testing the date wasnt being saved correctly in my DB
+func parseDate(dateStr string) (time.Time, error) {
+	if len(dateStr) == 4 {
+		// The date string contains a year only
+		return time.Parse("2006", dateStr)
+	} else if len(dateStr) == 7 {
+		// The date string contains a year and month
+		return time.Parse("2006-01", dateStr)
+	} else {
+		// The date string contains a full date
+		return time.Parse("2006-01-31", dateStr)
+	}
 }
