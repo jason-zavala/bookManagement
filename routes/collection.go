@@ -22,7 +22,7 @@ type CollectionResponse struct {
 	CollectionID string `json:"collection_id,omitempty"`
 	Message      string `json:"message,omitempty"`
 	Status       string `json:"status"`
-	Code         string `json:"code"`
+	Code         int    `json:"code"`
 }
 
 func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
@@ -39,7 +39,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 	if err != nil {
 		response := CollectionResponse{
 			Status: "error",
-			Code:   "400",
+			Code:   http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -50,7 +50,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 		response := CollectionResponse{
 			Status:  "error",
 			Message: "Collections must have at least a name and description.",
-			Code:    "400",
+			Code:    http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -64,7 +64,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 		// Collection already exists, return existing collection ID
 		response := CollectionResponse{
 			Status:       "success",
-			Code:         "200",
+			Code:         http.StatusOK,
 			CollectionID: strconv.FormatInt(existingCollectionID, 10),
 		}
 		w.WriteHeader(http.StatusOK)
@@ -74,7 +74,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 		// Error occurred during the database query
 		response := CollectionResponse{
 			Status: "error",
-			Code:   "500",
+			Code:   http.StatusInternalServerError,
 		}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
@@ -88,7 +88,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 	if err != nil {
 		response := CollectionResponse{
 			Status: "error",
-			Code:   "500",
+			Code:   http.StatusInternalServerError,
 		}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
@@ -100,7 +100,7 @@ func AddCollectionHandler(w http.ResponseWriter, r *http.Request, injectedDB str
 	response := CollectionResponse{
 		CollectionID: strconv.FormatInt(collectionID, 10),
 		Status:       "success",
-		Code:         "200",
+		Code:         http.StatusOK,
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -199,7 +199,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 	if err == sql.ErrNoRows {
 		response := Response{
 			Status:  "error",
-			Code:    "404",
+			Code:    http.StatusNotFound,
 			Message: "Collection not found",
 		}
 		w.WriteHeader(http.StatusNotFound)
@@ -208,7 +208,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 	} else if err != nil {
 		response := Response{
 			Status: "error",
-			Code:   "500",
+			Code:   http.StatusInternalServerError,
 		}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
@@ -255,7 +255,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 		response := Response{
 			Status:  "error",
 			Message: fmt.Sprintf("Books not found: %s", strings.Join(missingBooks, ", ")),
-			Code:    "404",
+			Code:    http.StatusNotFound,
 		}
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(response)
@@ -270,7 +270,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 			response := Response{
 				Status:  "error",
 				Message: fmt.Sprintf("Failed to write %s into database", bookID),
-				Code:    "500",
+				Code:    http.StatusInternalServerError,
 			}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
@@ -280,7 +280,7 @@ func AddBookToCollectionHandler(w http.ResponseWriter, r *http.Request, injected
 
 	response := Response{
 		Status: "success",
-		Code:   "200",
+		Code:   http.StatusOK,
 	}
 
 	w.WriteHeader(http.StatusOK)

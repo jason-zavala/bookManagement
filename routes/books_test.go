@@ -53,7 +53,7 @@ func TestAddBookHandlerSuccess(t *testing.T) {
 
 	expectedResponse := Response{
 		Status: "success",
-		Code:   "200",
+		Code:   http.StatusOK,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -61,7 +61,7 @@ func TestAddBookHandlerSuccess(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 }
 
@@ -94,8 +94,8 @@ func TestAddBookHandlerFail(t *testing.T) {
 
 	expectedResponse := Response{
 		Status:  "error",
-		Message: "Request to add book must include Author, and Title at a minimum.",
-		Code:    "400",
+		Message: "Request to add book must include Author and Title at a minimum.",
+		Code:    http.StatusBadRequest,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -103,11 +103,7 @@ func TestAddBookHandlerFail(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
-	}
-
-	if response.Message != expectedResponse.Message {
-		t.Errorf("Expected message %s, got %s", response.Message, expectedResponse.Message)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 }
 

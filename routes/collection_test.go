@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -45,7 +44,7 @@ func TestAddCollectionHandlerSuccess(t *testing.T) {
 
 	expectedResponse := CollectionResponse{
 		Status: "success",
-		Code:   "200",
+		Code:   http.StatusOK,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -53,7 +52,7 @@ func TestAddCollectionHandlerSuccess(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 }
 
@@ -87,7 +86,7 @@ func TestAddCollectionHandlerFail(t *testing.T) {
 	expectedResponse := CollectionResponse{
 		Status:  "error",
 		Message: "Collections must have at least a name and description.",
-		Code:    "400",
+		Code:    http.StatusBadRequest,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -95,7 +94,7 @@ func TestAddCollectionHandlerFail(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 
 	if response.Message != expectedResponse.Message {
@@ -208,16 +207,15 @@ func TestAddBookToCollectionHandlerSuccess(t *testing.T) {
 
 	expectedResponse := Response{
 		Status: "success",
-		Code:   "200",
+		Code:   http.StatusOK,
 	}
 
-	fmt.Println(response)
 	if response.Status != expectedResponse.Status {
 		t.Errorf("Expected status %s, got %s", expectedResponse.Status, response.Status)
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 }
 
@@ -265,7 +263,7 @@ func TestAddBookToCollectionHandlerCollectionNotFound(t *testing.T) {
 	expectedResponse := Response{
 		Status:  "error",
 		Message: "Collection not found",
-		Code:    "404",
+		Code:    http.StatusNotFound,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -273,7 +271,7 @@ func TestAddBookToCollectionHandlerCollectionNotFound(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 
 	if response.Message != expectedResponse.Message {
@@ -325,7 +323,7 @@ func TestAddBookToCollectionHandlerBookNotFound(t *testing.T) {
 	expectedResponse := Response{
 		Status:  "error",
 		Message: "Books not found: 999",
-		Code:    "404",
+		Code:    http.StatusNotFound,
 	}
 
 	if response.Status != expectedResponse.Status {
@@ -333,7 +331,7 @@ func TestAddBookToCollectionHandlerBookNotFound(t *testing.T) {
 	}
 
 	if response.Code != expectedResponse.Code {
-		t.Errorf("Expected code %s, got %s", expectedResponse.Code, response.Code)
+		t.Errorf("Expected code %d, got %d", expectedResponse.Code, response.Code)
 	}
 
 	if response.Message != expectedResponse.Message {

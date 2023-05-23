@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -23,7 +24,7 @@ type Book struct {
 
 type Response struct {
 	Status  string `json:"status"`
-	Code    string `json:"code"`
+	Code    int    `json:"code"`
 	Message string `json:"message,omitempty"`
 	BookID  string `json:"book_id,omitempty"`
 }
@@ -43,7 +44,7 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		// Return error response
 		response := Response{
 			Status: "error",
-			Code:   "400",
+			Code:   http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -56,7 +57,7 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		response := Response{
 			Status:  "error",
 			Message: "Request to add book must include Author and Title at a minimum.",
-			Code:    "400",
+			Code:    http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -70,13 +71,37 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		response := Response{
 			Status:  "error",
 			Message: "Failed to parse the published date. Valid formats for the date include YYYY, YYYY-MM, and YYYY-MM-DD",
-			Code:    "400",
+			Code:    http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
+	// Check if the book already exists
+	checkBookQuery := "SELECT book_id FROM Books WHERE title = ? AND author = ?;"
+	var existingBookID int64
+	err = db.QueryRow(checkBookQuery, book.Title, book.Author).Scan(&existingBookID)
+	if err == nil {
+		// Book already exists, return existing book ID
+		response := Response{
+			Status: "success",
+			Code:   http.StatusOK,
+			BookID: strconv.FormatInt(existingBookID, 10),
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(response)
+		return
+	} else if err != sql.ErrNoRows {
+		// Error occurred during the database query
+		response := Response{
+			Status:  "error",
+			Message: "Something went wrong with the database Query",
+			Code:    http.StatusInternalServerError,
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 	// Save the book to the database
 	insertBookQuery := "INSERT INTO Books (title, author, published_date, edition, description, genre)VALUES (?, ?, ?, ?, ?, ?);"
 	result, err := db.Exec(insertBookQuery, book.Title, book.Author, publishedDate, book.Edition, book.Description, book.Genre)
@@ -84,9 +109,10 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 		// Return error response
 		response := Response{
 			Status:  "error",
-			Message: "Failed to save book to the database",
-			Code:    "500",
+			Message: fmt.Sprintf("Failed to save book to the database with error: %s", err),
+			Code:    http.StatusInternalServerError,
 		}
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -98,7 +124,7 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request, injectedDB string) {
 	// Return success response
 	response := Response{
 		Status: "success",
-		Code:   "200",
+		Code:   http.StatusOK,
 		BookID: strconv.FormatInt(bookID, 10),
 	}
 
@@ -155,7 +181,7 @@ func FilterBooksHandler(w http.ResponseWriter, r *http.Request, injectedDB strin
 		response := Response{
 			Status:  "error",
 			Message: "Incorrectly formatted filter parameters",
-			Code:    "400",
+			Code:    http.StatusBadRequest,
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -256,6 +282,7 @@ func parseDate(dateStr string) (time.Time, error) {
 		return time.Parse("2006-01", dateStr)
 	} else {
 		// The date string contains a full date
-		return time.Parse("2006-01-31", dateStr)
+		t, err := time.Parse("2006-01-02", dateStr)
+		return t, err
 	}
 }
