@@ -285,7 +285,7 @@ curl -X GET 'http://localhost:8080/api/filter?title=Dune&genre=Science%20Fiction
   - `to_date`: Filter books published until a specific date.
 - **Example**:
   ```bash
-  curl -X GET 'http://localhost:8080/api/books/filter?title=Dune&genre=Science%20Fiction&from_date=1960-01-01&to_date=1970-12-31'
+  curl -X GET 'http://localhost:8080/api/v1/books/filter?title=Dune'
 
   ```
 - **Response**:
